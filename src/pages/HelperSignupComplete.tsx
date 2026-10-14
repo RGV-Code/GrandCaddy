@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { KUILS_RIVER_AREAS } from "../lib/areas";
 
 type Category = { id: string; name: string };
 
@@ -203,15 +204,19 @@ export default function HelperSignup() {
 
           <div>
             <label className={labelClass} htmlFor="suburb">
-              Suburb you work in
+              Area you work in
             </label>
-            <input
+            <select
               id="suburb"
               className={fieldClass}
-              placeholder="Paarl North"
               value={suburb}
               onChange={(e) => setSuburb(e.target.value)}
-            />
+            >
+              <option value="">Choose your area</option>
+              {KUILS_RIVER_AREAS.map((area) => (
+                <option key={area} value={area}>{area}</option>
+              ))}
+            </select>
           </div>
 
           <div>

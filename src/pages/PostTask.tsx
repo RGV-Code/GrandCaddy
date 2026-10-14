@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import type { TaskUrgency, TimeSlot } from "../types/task";
+import { KUILS_RIVER_AREAS } from "../lib/areas";
 
 type Category = { id: number; name: string; icon: string | null };
 
@@ -219,7 +220,7 @@ export default function PostTask() {
                 />
               </div>
               <div>
-                <label className={labelClass} htmlFor="suburb">Location / Suburb</label>
+                <label className={labelClass} htmlFor="suburb">Area</label>
                 <select
                   id="suburb"
                   className={fieldClass}
@@ -227,12 +228,9 @@ export default function PostTask() {
                   onChange={(e) => setSuburb(e.target.value)}
                 >
                   <option value="">Choose your suburb</option>
-                  <option value="Paarl North">Paarl North</option>
-                  <option value="Paarl Central">Paarl Central</option>
-                  <option value="Paarl South">Paarl South</option>
-                  <option value="Wellington">Wellington</option>
-                  <option value="Stellenbosch">Stellenbosch</option>
-                  <option value="Franschhoek">Franschhoek</option>
+                  {KUILS_RIVER_AREAS.map((area) => (
+                    <option key={area} value={area}>{area}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -440,7 +438,7 @@ export default function PostTask() {
                 R{effectiveBudget.toLocaleString()} – R
                 {Math.round(effectiveBudget * 1.4).toLocaleString()}
               </p>
-              <p className="text-xs text-gray-500">Typical range in Paarl</p>
+              <p className="text-xs text-gray-500">Typical range in Kuils River</p>
             </div>
 
             <button

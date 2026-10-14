@@ -274,7 +274,7 @@ export default function Profile() {
                   Billing address
                 </p>
                 <p className="mt-1 text-sm text-gray-800">
-                  {helper?.suburb ? `${helper.suburb}, ` : ""}Paarl
+                  {helper?.suburb ? `${helper.suburb}, ` : ""}Kuils River
                   <br />
                   Western Cape
                 </p>
