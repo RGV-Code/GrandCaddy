@@ -111,7 +111,7 @@ export default function Navbar() {
               </NavLink>
             )}
 
-            {(role.isCustomer || role.isHelper) && (
+            {role.isHelper && (
               <NavLink to="/my-bookings" className={navLinkClass}>
                 My bookings
               </NavLink>
@@ -158,7 +158,7 @@ export default function Navbar() {
           </Link>
 
           <Link
-            to="/post-task"
+            to={role.signedIn ? "/post-task" : "/login?redirect=%2Fpost-task"}
             className="rounded-full bg-[#0B5FFF] px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
           >
             Post a Task

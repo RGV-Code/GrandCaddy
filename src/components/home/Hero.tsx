@@ -30,14 +30,14 @@ export default function Hero() {
 
           <div className="mt-10 flex flex-wrap gap-3">
             <Link
-              to="/post-task"
+              to="/login?redirect=%2Fpost-task"
               className="inline-flex items-center gap-2 rounded-full bg-[#0B5FFF] px-6 py-3.5 font-semibold text-white transition hover:bg-blue-700"
             >
               Post a Task
               <ArrowRight size={18} />
             </Link>
             <Link
-              to="/browse"
+              to="/helper/signup"
               className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-6 py-3.5 font-semibold text-[#20212A] transition hover:border-gray-400"
             >
               Become a Caddy

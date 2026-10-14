@@ -46,7 +46,8 @@ export default function SignUp() {
         navigate(role === "helper" ? "/helper/signup" : "/");
       } else {
         alert("Account created. Check your email to confirm your account, then sign in.");
-        navigate("/login");
+        const redirect = role === "helper" ? "/helper/signup" : "/";
+        navigate(`/login?redirect=${encodeURIComponent(redirect)}`);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed.");

@@ -2,6 +2,7 @@
 import { Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/home/Navbar'
+import RequireAuth from './components/RequireAuth'
 
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -19,6 +20,10 @@ import Messages from './pages/Messages'
 import MessageThread from './pages/MessageThread'
 
 function App() {
+  const protectedRoute = (element: React.ReactNode) => (
+    <RequireAuth>{element}</RequireAuth>
+  )
+
   return (
     <>
       <Navbar />
@@ -27,23 +32,23 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        <Route path="/post-task" element={<PostTask />} />
-        <Route path="/my-tasks" element={<MyTasks />} />
-        <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/post-task" element={protectedRoute(<PostTask />)} />
+        <Route path="/my-tasks" element={protectedRoute(<MyTasks />)} />
+        <Route path="/my-bookings" element={protectedRoute(<MyBookings />)} />
         <Route path="/tasks/:id" element={<TaskDetail />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={protectedRoute(<Profile />)} />
 
         <Route path="/browse-tasks" element={<BrowseTasks />} />
         <Route path="/browse" element={<BrowseTasks />} />
 
-        <Route path="/helper" element={<HelperHome />} />
-        <Route path="/helper/signup" element={<HelperSignup />} />
-        <Route path="/helper/bookings" element={<MyBookings />} />
+        <Route path="/helper" element={protectedRoute(<HelperHome />)} />
+        <Route path="/helper/signup" element={protectedRoute(<HelperSignup />)} />
+        <Route path="/helper/bookings" element={protectedRoute(<MyBookings />)} />
 
         <Route path="/helpers/:id" element={<HelperProfile />} />
 
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/messages/:threadId" element={<MessageThread />} />
+        <Route path="/messages" element={protectedRoute(<Messages />)} />
+        <Route path="/messages/:threadId" element={protectedRoute(<MessageThread />)} />
       </Routes>
     </>
   )

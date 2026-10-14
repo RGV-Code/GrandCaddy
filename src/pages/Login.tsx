@@ -1,5 +1,5 @@
 // src/pages/Login.tsx
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Mail } from "lucide-react";
 
@@ -16,6 +16,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async () => {
     setError("");
@@ -28,7 +29,8 @@ export default function Login() {
     try {
       setLoading(true);
       await signIn(email, password);
-      navigate("/");
+      const redirect = new URLSearchParams(location.search).get("redirect");
+      navigate(redirect?.startsWith("/") ? redirect : "/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed.");
     } finally {
