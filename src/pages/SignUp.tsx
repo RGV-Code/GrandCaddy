@@ -1,7 +1,7 @@
 // src/pages/SignUp.tsx
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import { User, Mail } from "lucide-react";
+import { User, Mail, Phone } from "lucide-react";
 
 import Hero from "../components/Hero";
 import Toggle from "../components/Toggle";
@@ -13,10 +13,13 @@ import { signUp, type Role } from "../lib/auth";
 export default function SignUp() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState<Role>("customer");
+  const [searchParams] = useSearchParams();
+  const [role, setRole] = useState<Role>(searchParams.get("role") === "helper" ? "helper" : "customer");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -26,6 +29,11 @@ export default function SignUp() {
 
     if (!fullName || !email || !password || !confirmPassword) {
       setError("Please fill in all fields.");
+      return;
+    }
+
+    if (phone && !/^\+[1-9]\d{7,14}$/.test(phone)) {
+      setError("Enter your phone number in international format, for example +27123456789.");
       return;
     }
 
@@ -41,9 +49,12 @@ export default function SignUp() {
 
     try {
       setLoading(true);
-      await signUp(email, password, fullName, role);
-      alert("Account created successfully! 🎉");
-      navigate("/");
+      const { session } = await signUp(email, password, fullName, role, phone);
+      if (!session) {
+        setNotice("Account created. Check your email to confirm your address, then sign in to continue.");
+        return;
+      }
+      navigate(role === "helper" ? "/helper/verification" : "/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed.");
     } finally {
@@ -80,9 +91,19 @@ export default function SignUp() {
             <Input
               label="Email Address"
               placeholder="Enter your email"
+              type="email"
               icon={Mail}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <Input
+              label="Phone Number (include country code)"
+              placeholder="+27123456789"
+              type="tel"
+              icon={Phone}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
 
             <PasswordInput
@@ -102,6 +123,12 @@ export default function SignUp() {
             {error && (
               <div className="rounded-xl border border-red-200 bg-red-100 p-4">
                 <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
+            {notice && (
+              <div role="status" className="rounded-xl border border-green-200 bg-green-50 p-4">
+                <p className="text-sm text-green-800">{notice}</p>
               </div>
             )}
 

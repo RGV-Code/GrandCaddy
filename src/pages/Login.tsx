@@ -8,6 +8,7 @@ import Input from "../components/Input";
 import PasswordInput from "../components/PasswordInput";
 import Button from "../components/Button";
 import { signIn } from "../lib/auth";
+import { supabase } from "../lib/supabaseClient";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,8 +28,28 @@ export default function Login() {
 
     try {
       setLoading(true);
-      await signIn(email, password);
-      navigate("/");
+      const { user } = await signIn(email, password);
+      if (user.app_metadata.role === "admin") {
+        navigate("/admin/verifications");
+        return;
+      }
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (profileError) throw profileError;
+      if (profile?.role === "helper") {
+        const { data: verification, error: verificationError } = await supabase
+          .from("caddy_verifications")
+          .select("status")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (verificationError) throw verificationError;
+        navigate(verification?.status === "approved" ? "/helper/bookings" : "/helper/verification");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed.");
     } finally {
@@ -57,6 +78,7 @@ export default function Login() {
             <Input
               label="Email Address"
               placeholder="Enter your email"
+              type="email"
               icon={Mail}
               value={email}
               onChange={(e) => setEmail(e.target.value)}

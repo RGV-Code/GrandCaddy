@@ -1,92 +1,87 @@
-// src/pages/BrowseTasks.tsx
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 
-type Task = {
-  id: number
+type Booking = {
+  id: string
   title: string
+  description: string
   suburb: string
-  status: string
-  offered_amount: number
-  task_categories: { name: string }[] | null
-  users: { full_name: string }[] | null
+  offered_amount_zar: number
+  status: 'open' | 'accepted' | 'in_progress' | 'completed'
+  payment_status: 'pending' | 'paid'
+  created_at: string
+  customer_id: string
 }
 
 export default function BrowseTasks() {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  useEffect(() => {
-    async function fetchTasks() {
-      const { data, error } = await supabase
-        .from('tasks')
-        .select(`
-          id,
-          title,
-          suburb,
-          status,
-          offered_amount,
-          task_categories:category_id ( name ),
-          users:customer_id ( full_name )
-        `)
-        .order('created_at', { ascending: false })
+  const load = useCallback(async () => {
+    const { data, error: queryError } = await supabase
+      .from('service_bookings')
+      .select('id, title, description, suburb, offered_amount_zar, status, payment_status, created_at, customer_id')
+      .eq('status', 'open')
+      .eq('payment_status', 'paid')
+      .order('created_at', { ascending: false })
 
-      if (error) setError(error.message)
-      else setTasks((data ?? []) as unknown as Task[])
-      setLoading(false)
-    }
-    fetchTasks()
+    if (queryError) throw queryError
+    setBookings(data ?? [])
+    setLoading(false)
   }, [])
 
-  if (loading) return <p style={{ padding: 20 }}>Loading tasks…</p>
-  if (error) return <p style={{ padding: 20, color: 'red' }}>Error: {error}</p>
+  useEffect(() => {
+    void Promise.resolve().then(load).catch((err) => {
+      setError(err instanceof Error ? err.message : 'Unable to load available jobs.')
+      setLoading(false)
+    })
+  }, [load])
 
   return (
-    <div style={{ padding: 20, fontFamily: 'sans-serif', maxWidth: 700, margin: '0 auto' }}>
-      <h1>GrandCaddy — Open Tasks</h1>
-      <p style={{ color: '#666' }}>{tasks.length} task(s) found</p>
-
-      {tasks.map(task => {
-        const categoryName = task.task_categories?.[0]?.name ?? 'Uncategorised'
-        const customerName = task.users?.[0]?.full_name ?? 'Unknown'
-
-        return (
-          <div
-            key={task.id}
-            style={{
-              border: '1px solid #ddd',
-              borderRadius: 8,
-              padding: 16,
-              marginBottom: 12
-            }}
-          >
-            <h3 style={{ margin: '0 0 8px' }}>
-              {categoryName} — {task.title}
-            </h3>
-            <p style={{ margin: '4px 0' }}>
-              <strong>Posted by:</strong> {customerName}
-            </p>
-            <p style={{ margin: '4px 0' }}>
-              <strong>Suburb:</strong> {task.suburb}
-            </p>
-            <p style={{ margin: '4px 0' }}>
-              <strong>Offered:</strong> R{task.offered_amount.toFixed(2)}
-            </p>
-            <p style={{ margin: '4px 0' }}>
-              <strong>Status:</strong>{' '}
-              <span style={{
-                background: task.status === 'open' ? '#d4edda' : '#fff3cd',
-                padding: '2px 8px',
-                borderRadius: 4,
-                fontSize: 13
-              }}>
-                {task.status}
-              </span>
-            </p>
+    <main className="min-h-screen bg-[#F8F9FC] px-5 py-12">
+      <div className="mx-auto max-w-4xl">
+        <Link to="/" className="text-sm font-semibold text-[#0B5FFF]">← Home</Link>
+        <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold">Browse jobs</h1>
+            <p className="mt-2 text-gray-600">Paid service requests currently open for Caddies.</p>
           </div>
-        )
-      })}
-    </div>
+          <Link to="/helper/verification" className="rounded-full border border-[#0B5FFF] px-5 py-3 font-semibold text-[#0B5FFF]">
+            Verification
+          </Link>
+        </div>
+
+        {error && <p role="alert" className="mt-6 rounded-xl bg-red-50 p-4 text-red-700">{error}</p>}
+
+        {loading ? (
+          <p className="mt-8">Loading available jobs…</p>
+        ) : bookings.length === 0 ? (
+          <p className="mt-8 rounded-2xl bg-white p-6 text-gray-600">There are no paid jobs available right now.</p>
+        ) : (
+          <div className="mt-8 space-y-4">
+            {bookings.map((booking) => (
+              <article key={booking.id} className="rounded-2xl bg-white p-6 shadow-sm">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <h2 className="text-xl font-bold">{booking.title}</h2>
+                    <p className="mt-1 text-gray-600">{booking.suburb} · R{Number(booking.offered_amount_zar).toFixed(2)}</p>
+                  </div>
+                  <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">Paid</span>
+                </div>
+                <p className="mt-4 whitespace-pre-wrap text-gray-700">{booking.description}</p>
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-sm text-gray-500">Posted recently</p>
+                  <Link to={`/tasks/${booking.id}`} className="rounded-full bg-[#0B5FFF] px-5 py-3 font-semibold text-white">
+                    View details
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
   )
 }

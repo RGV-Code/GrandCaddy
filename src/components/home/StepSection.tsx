@@ -20,14 +20,14 @@ export default function StepSection() {
       number: "03",
       title: "Sit back and relax",
       description:
-        "Your helper arrives, gets the job done, and you securely pay through the app once you're 100% happy.",
+        "Your Caddy completes the job and marks it finished in the app. Pay securely when you book, and track the payment and job status along the way.",
       image: "/step3.jpg",
       reverse: false,
     },
   ];
 
   return (
-    <section className="bg-[#DDE2F2] py-24">
+    <section id="how-it-works" className="bg-[#DDE2F2] py-24">
       <div className="mx-auto max-w-7xl px-8">
 
         <h2 className="mb-20 text-center text-5xl font-bold text-[#20212A]">

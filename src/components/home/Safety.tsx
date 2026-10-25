@@ -7,9 +7,9 @@ import {
 const safetyItems = [
   {
     icon: ShieldCheck,
-    title: "Background Checked",
+    title: "Identity verified",
     description:
-      "Every GrandCaddy helper is identity verified and screened before joining.",
+      "Caddies must have their identity document reviewed and approved by an admin before accepting jobs.",
   },
   {
     icon: BadgeCheck,
@@ -27,7 +27,7 @@ const safetyItems = [
 
 export default function Safety() {
   return (
-    <section className="bg-[#DDE2F2] py-20">
+    <section id="safety" className="bg-[#DDE2F2] py-20">
       <div className="mx-auto max-w-7xl rounded-[40px] bg-[#0B5FFF] px-12 py-16 text-white shadow-2xl">
 
         <div className="text-center">

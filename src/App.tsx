@@ -12,6 +12,8 @@ import TaskDetail from './pages/TaskDetail.tsx'
 
 import HelperSignup from './pages/HelperSignup.tsx'
 import MyBookings from './pages/MyBookings.tsx'
+import PaymentComplete from './pages/PaymentComplete'
+import AdminVerifications from './pages/AdminVerifications'
 
 function App() {
   return (
@@ -27,6 +29,9 @@ function App() {
       <Route path="/browse-tasks" element={<BrowseTasks />} />
       <Route path="/helper/signup" element={<HelperSignup />} />
       <Route path="/helper/bookings" element={<MyBookings />} />
+      <Route path="/helper/verification" element={<HelperSignup />} />
+      <Route path="/admin/verifications" element={<AdminVerifications />} />
+      <Route path="/payment/complete" element={<PaymentComplete />} />
     </Routes>
   )
 }

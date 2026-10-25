@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 import {
   FaFacebook,
@@ -48,6 +48,16 @@ export default function Footer() {
                 Sign Up
               </Link>
             </li>
+            <li>
+              <Link to="/helper/bookings" className="hover:text-white">
+                Caddy bookings
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/verifications" className="hover:text-white">
+                Admin ID reviews
+              </Link>
+            </li>
 
             <li>
               <a
@@ -63,13 +73,17 @@ export default function Footer() {
         {/* Services */}
 
         <div>
-          <h3 className="mb-4 font-bold">Services</h3>
+          <h3 className="mb-4 font-bold">Contact us</h3>
 
           <ul className="space-y-3 text-gray-400">
-            <li>Companionship</li>
-            <li>Transportation</li>
-            <li>Shopping Assistance</li>
-            <li>Home Support</li>
+            <li>
+              <a href="mailto:info@grandcaddy.com" className="inline-flex items-center gap-2 hover:text-white">
+                <Mail size={16} /> info@grandcaddy.com
+              </a>
+            </li>
+            <li className="inline-flex items-center gap-2">
+              <Phone size={16} /> Phone support coming soon
+            </li>
           </ul>
         </div>
 

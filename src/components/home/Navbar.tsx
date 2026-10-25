@@ -1,5 +1,6 @@
 import { Bell, CircleUserRound } from "lucide-react";
 import Logo from "../Logo";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
@@ -15,18 +16,14 @@ export default function Navbar() {
 
           <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
 
-            <a
-              href="#"
+            <Link
+              to="/"
               className="text-[#0B5FFF] border-b-2 border-[#0B5FFF] pb-1"
             >
               Home
-            </a>
+            </Link>
 
-            <a href="#">Services</a>
-
-            <a href="#">How It Works</a>
-
-            <a href="#">Safety</a>
+            <a href="/#services">Services</a>
 
           </nav>
 
@@ -36,17 +33,16 @@ export default function Navbar() {
 
         <div className="flex items-center gap-5">
 
-          <Bell
-            size={20}
-            className="cursor-pointer"
-          />
+          <Link to="/my-tasks" aria-label="My bookings">
+            <Bell size={20} className="cursor-pointer" />
+          </Link>
 
-          <CircleUserRound
-            size={22}
-            className="cursor-pointer"
-          />
+          <Link to="/login" aria-label="Sign in">
+            <CircleUserRound size={22} className="cursor-pointer" />
+          </Link>
 
-          <button
+          <Link
+            to="/post-task"
             className="
               rounded-full
               bg-[#0B5FFF]
@@ -60,7 +56,7 @@ export default function Navbar() {
             "
           >
             Post a Task
-          </button>
+          </Link>
 
         </div>
 

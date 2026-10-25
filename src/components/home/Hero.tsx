@@ -35,14 +35,14 @@ export default function Hero() {
           <div className="mt-10 flex flex-wrap gap-5">
 
             <Link
-              to="/signup"
+              to="/signup?role=customer"
               className="rounded-full bg-[#0B5FFF] px-8 py-4 font-semibold text-white transition hover:bg-blue-700"
             >
               Post a Task for Free
             </Link>
 
             <Link
-              to="/signup"
+              to="/signup?role=helper"
               className="rounded-full bg-[#F6B14A] px-8 py-4 font-semibold text-white transition hover:bg-orange-500"
             >
               Become a Caddy
